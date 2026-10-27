@@ -1,0 +1,17 @@
+{
+  "name": "ระบบจัดการสต็อกมิเตอร์ PEA",
+  "short_name": "สต็อกมิเตอร์",
+  "description": "ระบบเบิก-จ่ายมิเตอร์ PEA Smart Operation by J.A.R.V.I.S",
+  "start_url": "./index.html",
+  "display": "standalone",
+  "background_color": "#f3e7e9",
+  "theme_color": "#4B2C83",
+  "icons": [
+    {
+      "src": "logo.png", 
+      "sizes": "192x192 512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ]
+}
