@@ -600,19 +600,19 @@
   }
 
   function processVoiceCommand(text) {
+    // กรองคำพูดที่ไม่จำเป็นออก เพื่อดึงแค่ Keyword
     let keyword = text.replace(/ช่วย/g, '').replace(/กรอง/g, '').replace(/หา/g, '').replace(/ค้นหา/g, '').replace(/ใบงาน/g, '').replace(/ที่อยู่/g, '').replace(/เบอร์/g, '').replace(/มิเตอร์/g, '').replace(/ครับ/g, '').replace(/ค่ะ/g, '').trim();
     if(keyword === "") keyword = text.trim();
 
-    new bootstrap.Tab(document.querySelector('#tab-search button')).show();
-    document.getElementById('searchKeyword').value = keyword; handleSearch(); 
+    // 1. นำคำสั่งเสียงไปใส่ในช่อง Global Search ด้านขวาบน (ตามที่บอสมาร์กไว้)
+    document.getElementById('globalJobSearch').value = keyword;
 
-    setTimeout(() => {
-      let resultDiv = document.getElementById('searchResult').innerHTML;
-      if (resultDiv.includes("table")) speak("พบข้อมูล " + keyword + " ในระบบคลังแล้วครับบอส");
-      else speak("ผมตรวจสอบแล้ว ไม่พบข้อมูลของ " + keyword + " เลยครับ");
-    }, 1500); 
+    // 2. พูดตอบรับการสั่งการทันที
+    speak("กำลังค้นหา " + keyword + " จากระบบทั้งหมดให้ครับบอส");
+
+    // 3. สั่งรันฟังก์ชันค้นหา Global (ทำงานเหมือนบอสพิมพ์แล้วกด Enter)
+    doGlobalJobSearch(); 
   }
-
   // 🚀 ลงทะเบียน Service Worker สำหรับ PWA
   if ('serviceWorker' in navigator) { window.addEventListener('load', () => { navigator.serviceWorker.register('./sw.js').then(reg => console.log('✅ Service Worker ลงทะเบียนสำเร็จ!')).catch(err => console.error('❌ Service Worker ล้มเหลว:', err)); }); }
 </script>
