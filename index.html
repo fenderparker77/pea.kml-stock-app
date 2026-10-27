@@ -31,7 +31,7 @@
     .nav-tabs .nav-link:hover { transform: translateY(-2px); }
     .nav-tabs .nav-link.active { background: linear-gradient(135deg, #4B2C83, #6A4C9C); color: #fff !important; box-shadow: 0 5px 15px rgba(75,44,131,0.3); }
 
-    .btn-primary { background: linear-gradient(135deg, #4B2C83, #6A4C9C); border: none; box-shadow: 0 4px 10px rgba(75,44,131,0.2); }
+    .btn-primary { background: linear-gradient(135deg, #4B2C83, #6A4C9C); border: none; box-shadow: 0 4px 10px rgba(75,44,131,0.2); color: white;}
     .btn-warning { background: linear-gradient(135deg, #F9A825, #F57F17); border: none; color: white; }
     .form-control, .form-select { background: rgba(255, 255, 255, 0.8); border: 1px solid rgba(75, 44, 131, 0.2); border-radius: 10px; }
     .form-control:focus { box-shadow: 0 0 10px rgba(75, 44, 131, 0.2); border-color: #4B2C83; }
@@ -53,16 +53,20 @@
 <body>
 
 <!-- ปุ่ม J.A.R.V.I.S -->
-<button id="jarvis-btn" class="jarvis-fab" onclick="toggleJarvis()" title="กดเพื่อสั่งการด้วยเสียง">
-  <i class="bi bi-mic-fill"></i>
-</button>
+<button id="jarvis-btn" class="jarvis-fab" onclick="toggleJarvis()" title="กดเพื่อสั่งการด้วยเสียง"><i class="bi bi-mic-fill"></i></button>
 
+<!-- Modals ต่างๆ -->
 <div class="modal fade" id="historyModal" tabindex="-1"><div class="modal-dialog modal-lg"><div class="modal-content"><div class="modal-header bg-secondary text-white"><h5 class="modal-title"><i class="bi bi-clock-history"></i> ประวัติ SLA</h5><button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button></div><div class="modal-body"><div class="table-responsive"><table class="table table-sm table-striped"><thead><tr><th>ชื่อผู้ใช้ไฟ</th><th>PEA Meter</th><th>ครบกำหนด</th><th>สถานะล่าสุด</th></tr></thead><tbody id="historyNotifList"></tbody></table></div></div></div></div></div>
 
 <div class="modal fade" id="loginModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"><div class="modal-dialog modal-dialog-centered"><div class="modal-content"><div class="modal-header text-white" style="background: linear-gradient(135deg, #4B2C83, #6A4C9C);"><h5 class="modal-title">เข้าสู่ระบบเบิก-จ่ายมิเตอร์</h5></div><div class="modal-body"><label class="form-label fw-bold text-secondary">กรุณาระบุชื่อผู้ใช้งาน (หรือรหัสพนักงาน)</label><input type="text" id="loginInput" class="form-control p-3" placeholder="พิมพ์ชื่อของคุณที่นี่..." required></div><div class="modal-footer border-0"><button type="button" id="btnLogin" class="btn btn-success w-100 p-2 fw-bold" onclick="saveLogin()">เข้าใช้งานระบบ</button></div></div></div></div>
 
 <div class="modal fade" id="reqPhotoModal" tabindex="-1"><div class="modal-dialog modal-md modal-dialog-centered"><div class="modal-content border-0 shadow-lg"><div class="modal-header bg-warning text-dark"><h5 class="modal-title fw-bold"><i class="bi bi-image"></i> รูปภาพแนบจากการแจ้งเรื่อง</h5><button type="button" class="btn-close" data-bs-dismiss="modal"></button></div><div class="modal-body p-4 text-center" id="reqPhotoBody"></div></div></div></div>
 
+<div class="modal fade" id="elecDetailsModal" tabindex="-1"><div class="modal-dialog modal-md modal-dialog-centered"><div class="modal-content border-0 shadow-lg"><div class="modal-header bg-success text-white"><h5 class="modal-title fw-bold"><i class="bi bi-info-circle-fill"></i> รายละเอียดผลการตรวจสอบ</h5><button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button></div><div class="modal-body p-4 bg-white" id="exportContentArea"><h5 class="text-primary fw-bold mb-1" id="detCustName"></h5><p class="text-muted small border-bottom pb-2 mb-3">หมายเลข PEA: <span id="detPEA" class="fw-bold text-dark"></span></p><div class="mb-3"><span class="small fw-bold text-secondary d-block mb-1">1. ผลการตรวจเบื้องต้น:</span><span id="detLeak" class="badge fs-6"></span></div><div class="mb-3"><span class="small fw-bold text-secondary d-block mb-1">2. สาเหตุที่พบ:</span><div id="detCause" class="p-2 bg-light border rounded small text-dark" style="min-height: 40px;"></div></div><div class="mb-3"><span class="small fw-bold text-secondary d-block mb-1">3. สรุปผลการแก้ไข:</span><div id="detSummary" class="p-2 bg-light border rounded small text-dark" style="min-height: 40px;"></div></div><div><span class="small fw-bold text-secondary d-block mb-1">4. รูปภาพประกอบ:</span><div id="detPhotos" class="mt-1"></div></div></div><div class="modal-footer bg-light border-0 d-flex justify-content-between"><button type="button" class="btn btn-outline-primary fw-bold flex-grow-1 me-2" id="btnExportImage" onclick="exportModalToImage()"><i class="bi bi-camera"></i> บันทึกเป็นรูปภาพ</button><button type="button" class="btn btn-secondary fw-bold flex-grow-1 ms-2" data-bs-dismiss="modal">ปิดหน้าต่าง</button></div></div></div></div>
+
+<div class="modal fade" id="elecInspectModal" tabindex="-1" data-bs-backdrop="static"><div class="modal-dialog modal-lg"><div class="modal-content"><div class="modal-header bg-danger text-white"><h5 class="modal-title"><i class="bi bi-clipboard-check"></i> บันทึกผลการตรวจสอบค่าไฟ</h5><button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button></div><div class="modal-body"><input type="hidden" id="inspRowIndex"><div class="alert alert-light border border-danger p-2 mb-3"><small class="fw-bold text-muted">ข้อมูลผู้ใช้ไฟ:</small><br><span id="inspDispName" class="fw-bold text-primary"></span> | PEA: <span id="inspDispPEA" class="fw-bold text-dark"></span> <div id="navLinkArea" class="mt-2"></div></div><div class="mb-3"><label class="fw-bold text-dark">1. ผลการตรวจสอบเบื้องต้น <span class="text-danger">*</span></label><div class="d-flex gap-3 mt-2"><div class="form-check"><input class="form-check-input border-danger" type="radio" name="inspLeakStatus" id="leakYes" value="พบไฟรั่วในระบบ" checked><label class="form-check-label text-danger fw-bold" for="leakYes">พบไฟรั่วในระบบ</label></div><div class="form-check"><input class="form-check-input border-success" type="radio" name="inspLeakStatus" id="leakNo" value="ไม่พบไฟรั่วในระบบ"><label class="form-check-label text-success fw-bold" for="leakNo">ไม่พบไฟรั่วในระบบ</label></div></div></div><div class="mb-3"><label class="fw-bold text-dark">2. อัปโหลดภาพถ่าย/แนบไฟล์ (สูงสุด 5 รูป)</label><input type="file" id="inspFiles" class="form-control" accept="image/*" multiple></div><div class="mb-3"><label class="fw-bold text-dark">3. สาเหตุที่ทำให้ค่าไฟแพงผิดปกติ</label><textarea id="inspCause" class="form-control" rows="2"></textarea></div><div class="mb-3"><label class="fw-bold text-dark">4. สรุปผลการตรวจสอบ / การแก้ไข</label><textarea id="inspSummary" class="form-control" rows="2"></textarea></div></div><div class="modal-footer"><button type="button" class="btn btn-secondary" data-bs-dismiss="modal">ยกเลิก</button><button type="button" class="btn btn-success fw-bold" id="btnSaveInspect" onclick="submitInspection()"><i class="bi bi-save"></i> บันทึกผลการตรวจสอบ</button></div></div></div></div>
+
+<!-- ส่วนหลักของแอป -->
 <div class="container">
   <div class="card p-4 mb-4"><div class="row align-items-center">
     <div class="col-md-7 mb-3 mb-md-0">
@@ -100,6 +104,7 @@
   </ul>
 
   <div class="tab-content">
+    <!-- แท็บเบิกจ่าย -->
     <div class="tab-pane fade show active" id="borrow"><div class="card p-4">
         <label class="fw-bold text-primary mb-2">เลือกโหมดการทำงาน:</label>
         <select id="modeSelector" class="form-select border-primary mb-4 p-2 fw-bold text-secondary" onchange="switchMode()">
@@ -112,33 +117,64 @@
         
         <div class="loader" id="borrowLoader"><div class="spinner-border text-primary"></div><p id="loadingText" class="mt-2 text-primary fw-bold">กำลังเริ่มระบบ...</p></div>
 
-        <!-- 5 Mode Sections (รวบรัด UI โค้ดเดิม) -->
         <div id="mode1_section" class="mode-section" style="display:block;"><h5 class="mb-3 text-secondary">มิเตอร์คิวถัดไป: <span id="targetPeaDisplay" class="text-danger">กำลังโหลด...</span></h5><input type="hidden" id="targetRow"><form id="borrowForm" onsubmit="handleBorrowSubmit(event, 1)"><div id="dynamicFormFields"></div><button type="submit" class="btn btn-success w-100 mt-3 rounded-pill py-2 fw-bold shadow-sm" id="btnSubmitBorrow" disabled><i class="bi bi-cloud-arrow-up"></i> บันทึกการเบิก-จ่าย</button></form></div>
-        <div id="mode21_section" class="mode-section"><form onsubmit="handleBorrowSubmit(event, 21)"><label class="small fw-bold mb-1 text-primary">เลือกหมายเลข PEA แบต N (เลือกได้หลายลูก): <span class="text-danger">*</span></label><div id="nMeterChecklist" class="border p-3 rounded mb-3" style="max-height:150px; overflow-y:auto; background: rgba(255,255,255,0.6);"></div><div class="mb-3"><label class="small fw-bold">ชื่อผู้ใช้ไฟ <span class="text-danger">*</span></label><input type="text" id="m21_name" class="form-control" required></div><div class="mb-3"><label class="small fw-bold">ประเภทคำร้อง/กิจกรรม <span class="text-danger">*</span></label><input type="text" id="m21_activity" class="form-control" list="dl_optE" required autocomplete="off"></div><div class="mb-3"><label class="small fw-bold">ผู้เบิก <span class="text-danger">*</span></label><input type="text" id="m21_borrower" class="form-control" list="dl_optH" required autocomplete="off"></div><div class="mb-3"><label class="small fw-bold">หมายเหตุ</label><input type="text" id="m21_note" class="form-control"></div><button type="submit" class="btn btn-primary w-100 rounded-pill py-2 fw-bold">บันทึกเบิกแบต N</button></form></div>
+        <div id="mode21_section" class="mode-section"><form onsubmit="handleBorrowSubmit(event, 21)"><label class="small fw-bold mb-1 text-primary">เลือกหมายเลข PEA แบต N (เลือกได้หลายลูก): <span class="text-danger">*</span></label><div id="nMeterChecklist" class="border p-3 rounded mb-3" style="max-height:150px; overflow-y:auto; background: rgba(255,255,255,0.6);"></div><div class="mb-3"><label class="small fw-bold">ชื่อผู้ใช้ไฟ <span class="text-danger">*</span></label><input type="text" id="m21_name" class="form-control" required></div><div class="mb-3"><label class="small fw-bold">ประเภทคำร้อง/กิจกรรม <span class="text-danger">*</span></label><input type="text" id="m21_activity" class="form-control" list="dl_optE" required autocomplete="off"></div><div class="mb-3"><label class="small fw-bold">ผู้เบิก <span class="text-danger">*</span></label><input type="text" id="m21_borrower" class="form-control" list="dl_optH" required autocomplete="off"></div><div class="mb-3"><label class="small fw-bold">หมายเหตุ</label><input type="text" id="m21_note" class="form-control"></div><button type="submit" class="btn btn-primary w-100 rounded-pill py-2 fw-bold text-white">บันทึกเบิกแบต N</button></form></div>
         <div id="mode22_section" class="mode-section"><form onsubmit="handleBorrowSubmit(event, 22)"><div class="mb-3"><label class="small fw-bold text-primary">ระบุจำนวนมิเตอร์ที่ต้องการเบิก: <span class="text-danger">*</span></label><input type="number" id="m22_count" class="form-control" min="1" max="20" onchange="generatePeaInputs()"></div><div id="rMeterInputs" class="mb-3"></div><div class="mb-3"><label class="small fw-bold">ชื่อผู้ใช้ไฟ <span class="text-danger">*</span></label><input type="text" id="m22_name" class="form-control" required></div><div class="mb-3"><label class="small fw-bold">ประเภทคำร้อง <span class="text-danger">*</span></label><input type="text" id="m22_activity" class="form-control" list="dl_optE" required autocomplete="off"></div><div class="mb-3"><label class="small fw-bold">ผู้ดำเนินการ <span class="text-danger">*</span></label><input type="text" id="m22_borrower" class="form-control" list="dl_optH" required autocomplete="off"></div><div class="mb-3"><label class="small fw-bold">หมายเหตุ</label><input type="text" id="m22_note" class="form-control"></div><button type="submit" class="btn btn-warning w-100 rounded-pill py-2 fw-bold text-dark">บันทึกข้อมูล</button></form></div>
         <div id="mode31_section" class="mode-section"><form onsubmit="handleBorrowSubmit(event, 31)"><div class="mb-3"><label class="small fw-bold text-danger">กรอกหมายเลข PEA ที่ต้องการยกเลิก: <span class="text-danger">*</span></label><input type="text" id="m31_pea" class="form-control" required></div><button type="submit" class="btn btn-danger w-100 rounded-pill py-2 fw-bold">ยกเลิกข้อมูลการเบิก</button></form></div>
         <div id="mode32_section" class="mode-section"><div class="input-group mb-3"><input type="text" id="m32_searchPea" class="form-control border-info" placeholder="กรอกหมายเลข PEA..."><button class="btn btn-info text-white fw-bold" type="button" onclick="fetchUpdateData()">ดึงข้อมูล</button></div><form id="updateForm" style="display:none;" onsubmit="handleBorrowSubmit(event, 32)"><h5 class="text-primary mb-3 border-bottom pb-2">กำลังแก้ไข: <span id="updatePeaDisplay" class="text-danger"></span></h5><input type="hidden" id="updateTargetRow"><div id="updateFormFields"></div><button type="submit" class="btn btn-success w-100 mt-3 rounded-pill py-2 fw-bold shadow-sm">อัปเดทข้อมูล / ปิดงาน</button></form></div>
     </div></div>
 
-    <div class="tab-pane fade" id="search"><div class="card p-4"><div class="mb-3 fw-bold text-secondary"><input class="form-check-input" type="radio" name="searchType" id="sP" value="PEA" checked onchange="toggleSearchUI()"> PEA &nbsp; <input class="form-check-input" type="radio" name="searchType" id="sN" value="NAME" onchange="toggleSearchUI()"> ชื่อผู้ใช้ไฟ</div><div class="input-group mb-3"><input type="text" id="searchKeyword" class="form-control p-3 border-primary" placeholder="พิมพ์หมายเลข PEA..."><datalist id="customerNameList"></datalist><button class="btn btn-primary px-4 fw-bold" onclick="handleSearch()"><i class="bi bi-search"></i> ค้นหา</button></div><div id="searchResult" class="mt-3"></div></div></div>
-
+    <!-- แท็บค้นหาและ Export -->
+    <div class="tab-pane fade" id="search"><div class="card p-4"><div class="mb-3 fw-bold text-secondary"><input class="form-check-input" type="radio" name="searchType" id="sP" value="PEA" checked onchange="toggleSearchUI()"> PEA &nbsp; <input class="form-check-input" type="radio" name="searchType" id="sN" value="NAME" onchange="toggleSearchUI()"> ชื่อผู้ใช้ไฟ</div><div class="input-group mb-3"><input type="text" id="searchKeyword" class="form-control p-3 border-primary" placeholder="พิมพ์หมายเลข PEA..."><datalist id="customerNameList"></datalist><button class="btn btn-primary px-4 fw-bold text-white" onclick="handleSearch()"><i class="bi bi-search"></i> ค้นหา</button></div><div id="searchResult" class="mt-3"></div></div></div>
     <div class="tab-pane fade" id="export"><div class="card p-4 text-center"><div class="row mb-3"><div class="col"><label class="fw-bold text-secondary">จากวันที่:</label><input type="date" id="exportStartDate" class="form-control"></div><div class="col"><label class="fw-bold text-secondary">ถึงวันที่:</label><input type="date" id="exportEndDate" class="form-control"></div></div><div class="d-flex gap-2 justify-content-center mt-3"><button class="btn btn-success px-4 rounded-pill fw-bold" onclick="handleExport('EXCEL')"><i class="bi bi-file-earmark-excel"></i> ดาวน์โหลด Excel</button><button class="btn btn-danger px-4 rounded-pill fw-bold" onclick="handleExport('PDF')"><i class="bi bi-file-pdf"></i> บันทึก PDF</button></div></div></div>
     
+    <!-- แท็บตารางสถานะงาน -->
     <div class="tab-pane fade" id="completed"><div class="card p-4"><h4 class="text-info mb-3 fw-bold"><i class="bi bi-check-circle-fill"></i> รายการส่งงานแล้ว</h4><div class="row mb-3"><div class="col-md-4 mb-2"><select id="monthSelector" class="form-select border-info fw-bold" onchange="renderCompletedTable()"></select></div><div class="col-md-8 mb-2"><input type="text" id="searchCompleted" class="form-control border-info" placeholder="🔍 ค้นหาในตาราง..." onkeyup="filterTable('tableCompleted', this.value)"></div></div><div class="loader" id="completedLoader"><div class="spinner-border text-info"></div></div><div id="completedResult"></div></div></div>
-
     <div class="tab-pane fade" id="pending"><div class="card p-4"><h4 class="text-warning mb-3 fw-bold" style="color: #F9A825 !important;"><i class="bi bi-hourglass-split"></i> งานคงเหลือ</h4><input type="text" id="searchPending" class="form-control mb-3 border-warning" placeholder="🔍 ค้นหา PEA, ชื่อ..." onkeyup="filterTable('tablePending', this.value)"><div class="loader" id="pendingLoader"><div class="spinner-border text-warning"></div></div><div id="pendingResult"></div></div></div>
 
-    <!-- Elec Tab & Modals (โครงสร้างเดิมที่บอสให้มา ถูกรวมไว้ด้านล่างใน JS/CSS แล้ว) -->
-    <!-- (ลดรูปเพื่อไม่ให้เกินโควต้าโค้ด แต่ยังคงมี Form ไว้ใน JS) -->
+    <!-- แท็บแจ้งไฟแพง -->
+    <div class="tab-pane fade" id="elecTab">
+      <div class="card p-4 mb-4 shadow-sm">
+        <h5 class="text-danger fw-bold border-bottom pb-2"><i class="bi bi-file-earmark-text"></i> ฟอร์มรับแจ้งค่าไฟแพง (เคาน์เตอร์)</h5>
+        <form id="elecForm" onsubmit="submitElecReportWrapper(event)">
+          <div class="row">
+            <div class="col-md-6 mb-3"><label class="small fw-bold">ชื่อผู้ใช้ไฟ</label><input type="text" id="el_custName" class="form-control border-danger"></div>
+            <div class="col-md-6 mb-3"><label class="small fw-bold">หมายเลขผู้ใช้ไฟ (CA)</label><input type="text" id="el_caNumber" class="form-control"></div>
+            <div class="col-md-4 mb-3"><label class="small fw-bold">หมายเลข PEA <span class="text-danger">*</span></label><input type="text" id="el_peaNumber" class="form-control border-danger" required></div>
+            <div class="col-md-4 mb-3"><label class="small fw-bold">หน่วยการใช้ไฟล่าสุด</label><input type="number" id="el_units" class="form-control border-danger"></div>
+            <div class="col-md-4 mb-3"><label class="small fw-bold">เบอร์โทรศัพท์ <span class="text-danger">*</span></label><input type="text" id="el_phone" class="form-control border-danger" required></div>
+            <div class="col-md-6 mb-3"><label class="small fw-bold">ที่อยู่</label><input type="text" id="el_address" class="form-control border-danger" placeholder="ระบุบ้านเลขที่ หมู่ ซอย ถนน..."></div>
+            <div class="col-md-6 mb-3"><label class="small fw-bold">ตำแหน่ง (พิกัด / ลิงก์แผนที่)</label><input type="text" id="el_location" class="form-control border-danger" placeholder="วางลิงก์ Google Maps หรือพิกัด GPS..."></div>
+            <div class="col-12 mb-3"><label class="small fw-bold">อัปโหลดรูปภาพ / แนบไฟล์</label><input type="file" id="el_photo" class="form-control p-2" accept="image/*,application/pdf"></div>
+          </div>
+          <button type="submit" class="btn btn-danger w-100 fw-bold rounded-pill shadow-sm" id="btnElecSubmit"><i class="bi bi-send"></i> บันทึกข้อมูลรับแจ้ง</button>
+        </form>
+      </div>
+
+      <div class="card p-4 shadow-sm">
+        <div class="d-flex justify-content-between align-items-center mb-3">
+          <h5 class="text-danger fw-bold m-0"><i class="bi bi-list-task"></i> รายการรอตรวจสอบ (ช่าง)</h5>
+          <button class="btn btn-sm btn-outline-secondary rounded-pill" onclick="loadElecData()"><i class="bi bi-arrow-clockwise"></i> รีเฟรช</button>
+        </div>
+        <input type="text" id="searchElec" class="form-control mb-3 border-danger" placeholder="🔍 พิมพ์ค้นหา PEA หรือ ชื่อลูกค้า..." onkeyup="filterTable('tableElec', this.value)">
+        <div class="loader" id="elecLoader"><div class="spinner-border text-danger"></div><p>กำลังโหลด...</p></div>
+        <div class="table-container">
+          <table id="tableElec" class="table table-sm table-hover align-middle mb-0" style="white-space: nowrap; background: rgba(255,255,255,0.8);">
+            <thead><tr><th>วันที่รับแจ้ง</th><th>PEA</th><th>ลูกค้า</th><th>เบอร์โทรศัพท์</th><th>หน่วย</th><th>สถานะ</th><th class="text-center" id="th-manage">จัดการ</th></tr></thead>
+            <tbody id="elecTableBody"><tr><td colspan="7" class="text-center text-muted">กำลังโหลดข้อมูล...</td></tr></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
   </div>
 </div>
-
+<div id="hiddenTableForPdf" class="p-3"><h4 class="text-center">รายงานมิเตอร์ PEA</h4><table class="table table-bordered border-dark" style="font-size:10px;"><thead id="pdfThead"></thead><tbody id="pdfTbody"></tbody></table></div>
 <datalist id="dl_optH"></datalist><datalist id="dl_optE"></datalist>
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 <script>
   // =========================================================
-  // 🌐 ส่วนเชื่อมต่อ API (แทนที่ google.script.run)
+  // 🌐 ส่วนเชื่อมต่อ API
   // =========================================================
   const API_URL = "https://script.google.com/macros/s/AKfycbwKelX5qCNdBlFde3UQyQ1N_4ARCmTphBInfqs9hSjt9rD2GjZnwwaRr_YoKVNcNpgK/exec"; // ⚠️ วางลิงก์ /exec ที่นี่ ⚠️
 
@@ -150,23 +186,17 @@
      })
      .then(response => response.json())
      .then(data => onSuccess(data))
-     .catch(error => {
-        console.error('API Error:', error);
-        if(onFailure) onFailure(error);
-        else alert('เกิดข้อผิดพลาดในการเชื่อมต่อกับเซิร์ฟเวอร์');
-     });
+     .catch(error => { console.error('API Error:', error); if(onFailure) onFailure(error); else alert('เชื่อมต่อเซิร์ฟเวอร์ล้มเหลว'); });
   }
 
-  // ตัวแปร Global ของแอป
   let myChart, currentUser = "", currentUserRole = "", currentPeaNumber = "";
   let globalHeaders = [], globalOptionsE = [], globalOptionsH = [];
   let completedMetersData = [], completedMetersHeaders = [], pendingMetersData = [], pendingMetersHeaders = [];
 
   window.onerror = function(msg, url, line) { console.error(msg); };
 
-  // บีบอัดรูป
   async function compressImage(file, maxWidth, maxHeight, quality) {
-      if (file.type === 'image/heic' || file.name.toLowerCase().endsWith('.heic')) throw new Error("ไม่รองรับ HEIC ครับ");
+      if (file.type === 'image/heic' || file.name.toLowerCase().endsWith('.heic')) throw new Error("ไม่รองรับภาพ HEIC ครับ");
       const options = { maxSizeMB: 0.3, maxWidthOrHeight: maxWidth || 1024, useWebWorker: true, initialQuality: quality || 0.7 };
       try {
           const compressedFile = await imageCompression(file, options);
@@ -192,32 +222,26 @@
 
   function applyRoleUI() {
       const badge = document.getElementById("roleBadge");
-      if (currentUserRole === "ADMIN") { badge.innerText = "Admin"; badge.className = "badge bg-danger ms-2"; } 
+      if (currentUserRole === "ADMIN") { badge.innerText = "Admin"; badge.className = "badge bg-danger ms-2"; document.getElementById("th-manage").style.display = "table-cell"; } 
       else if (currentUserRole === "CONTRACTOR") {
           badge.innerText = "ผู้รับเหมา"; badge.className = "badge bg-warning text-dark ms-2";
-          document.getElementById("tab-borrow").style.display = "none"; document.getElementById("tab-search").style.display = "none";
-          document.getElementById("tab-export").style.display = "none";
-          new bootstrap.Tab(document.querySelector('#tab-pending button')).show();
-          loadJobStatus(); 
+          document.getElementById("tab-borrow").style.display = "none"; document.getElementById("tab-search").style.display = "none"; document.getElementById("tab-export").style.display = "none"; document.getElementById("th-manage").style.display = "none";
+          new bootstrap.Tab(document.querySelector('#tab-pending button')).show(); loadJobStatus(); 
       } else {
           badge.innerText = "ทั่วไป"; badge.className = "badge bg-primary ms-2";
+          document.getElementById("tab-borrow").style.display = "block"; document.getElementById("tab-search").style.display = "block"; document.getElementById("tab-export").style.display = "block"; document.getElementById("th-manage").style.display = "none";
       }
   }
 
   function saveLogin() {
-    const input = document.getElementById("loginInput").value.trim(); 
-    if (!input) return;
-    const btn = document.getElementById("btnLogin"); 
-    btn.innerText = "กำลังตรวจสอบ..."; btn.disabled = true;
+    const input = document.getElementById("loginInput").value.trim(); if (!input) return;
+    const btn = document.getElementById("btnLogin"); btn.innerText = "กำลังตรวจสอบ..."; btn.disabled = true;
     
     callAPI("checkUserLogin", {username: input}, function(res) {
         if (res.success) {
-            localStorage.setItem("pea_meter_user", input); 
-            localStorage.setItem("pea_meter_role", res.role); 
-            currentUser = input; currentUserRole = res.role;
-            document.getElementById("displayUserName").innerText = currentUser;
-            bootstrap.Modal.getInstance(document.getElementById('loginModal')).hide();
-            applyRoleUI(); loadInitialDataSequential();
+            localStorage.setItem("pea_meter_user", input); localStorage.setItem("pea_meter_role", res.role); 
+            currentUser = input; currentUserRole = res.role; document.getElementById("displayUserName").innerText = currentUser;
+            bootstrap.Modal.getInstance(document.getElementById('loginModal')).hide(); applyRoleUI(); loadInitialDataSequential();
         } else { alert("❌ " + res.message); btn.innerText = "เข้าใช้งานระบบ"; btn.disabled = false; }
     }, function(err) { alert("ข้อผิดพลาด: " + err.message); btn.innerText = "เข้าใช้งานระบบ"; btn.disabled = false; });
   }
@@ -237,7 +261,6 @@
   function loadInitialDataSequential() {
       if (currentUserRole === "CONTRACTOR") { loadDashboardSequential(); return; }
       const bEl = document.getElementById("borrowLoader"); bEl.style.display = "block"; document.getElementById("loadingText").innerText = "ดึงข้อมูลโครงสร้าง (1/4)...";
-      
       callAPI("getInitialData", {}, function(d) {
           globalHeaders = d.headers || []; globalOptionsE = d.optionsE || []; globalOptionsH = d.optionsH || [];
           document.getElementById("dl_optH").innerHTML = globalOptionsH.map(o => '<option value="' + String(o).replace(/"/g, '"') + '">').join("");
@@ -250,9 +273,8 @@
               document.getElementById("btnSubmitBorrow").disabled = false;
           } else { document.getElementById("targetPeaDisplay").innerText = "สต็อกหมด"; }
           
-          let nHtml = (d.availableNMeters || []).length > 0 ? (d.availableNMeters).map(pea => '<div class="form-check"><input class="form-check-input chk-pea-n" type="checkbox" value="' + pea + '"><label class="form-check-label fw-bold">' + pea + '</label></div>').join("") : "<span class='text-danger small'>ไม่มีมิเตอร์ว่างในคลัง</span>";
-          document.getElementById("nMeterChecklist").innerHTML = nHtml;
-          loadDashboardSequential();
+          let nHtml = (d.availableNMeters || []).length > 0 ? (d.availableNMeters).map(pea => '<div class="form-check"><input class="form-check-input chk-pea-n" type="checkbox" value="' + pea + '"><label class="form-check-label fw-bold">' + pea + '</label></div>').join("") : "<span class='text-danger small'>ไม่มีมิเตอร์ว่าง</span>";
+          document.getElementById("nMeterChecklist").innerHTML = nHtml; loadDashboardSequential();
       }, function(err) { bEl.innerHTML = '<div class="alert alert-danger mt-3"><b>การเชื่อมต่อล้มเหลว:</b> ' + err.message + '</div>'; });
   }
 
@@ -269,25 +291,17 @@
   function loadJobStatusForChartSequential() {
       document.getElementById("loadingText").innerText = "เตรียมข้อมูลกราฟ (3/4)...";
       callAPI("getJobStatusMeters", {}, function(r) {
-          if(r.success) drawPieChart(r.completed.length, r.pending.length); 
-          document.getElementById("loadingText").innerText = "พร้อมใช้งาน! (4/4)..."; loadCustomerNamesSequential();
+          if(r.success) drawPieChart(r.completed.length, r.pending.length); document.getElementById("loadingText").innerText = "พร้อมใช้งาน! (4/4)..."; loadCustomerNamesSequential();
       }, function(err) { document.getElementById("loadingText").innerText = "พร้อมใช้งาน! (4/4)..."; loadCustomerNamesSequential(); });
   }
 
-  function loadCustomerNamesSequential() {
-      callAPI("getCustomerNames", {}, function(ns) {
-          const dl = document.getElementById("customerNameList"); dl.innerHTML = "";
-          ns.forEach(n => dl.appendChild(new Option(n, n))); 
-          document.getElementById("borrowLoader").style.display="none";
-      });
-  }
+  function loadCustomerNamesSequential() { callAPI("getCustomerNames", {}, function(ns) { const dl = document.getElementById("customerNameList"); dl.innerHTML = ""; ns.forEach(n => dl.appendChild(new Option(n, n))); document.getElementById("borrowLoader").style.display="none"; }); }
 
   function buildDynamicForm(headers, optE, optH, prefix, values=[]) {
      let html = "";
      for(let i = 0; i < headers.length; i++) {
         let isReq = (i === 0) ? "required" : ""; let reqMark = (i === 0) ? '<span class="text-danger"> *</span>' : "";
-        let rawVal = (values[i] !== undefined && values[i] !== null) ? String(values[i]) : ""; let escapedVal = rawVal.replace(/"/g, '"'); 
-        let input = "";
+        let rawVal = (values[i] !== undefined && values[i] !== null) ? String(values[i]) : ""; let escapedVal = rawVal.replace(/"/g, '"'); let input = "";
         
         if (i === 2) { 
           let checkHtml = ""; let otherArray = rawVal.split(",").map(s=>s.trim()).filter(String); 
@@ -314,7 +328,6 @@
 
   async function handleBorrowSubmit(e, mode) {
     e.preventDefault(); document.getElementById("borrowLoader").style.display="block"; document.getElementById("loadingText").innerText = "กำลังบันทึกข้อมูล...";
-    
     if(mode === 1 || mode === 32) {
         let prefix = (mode === 1) ? "field_" : "upd_"; let targetRow = document.getElementById(mode === 1 ? "targetRow" : "updateTargetRow").value; let formData = [];
         for (let i = 0; i < globalHeaders.length; i++) {
@@ -331,17 +344,12 @@
                  formData[6] = { isFile: true, base64: base64Data, fileName: file.name, mimeType: 'image/jpeg' }; 
                  finishSubmit(mode, {targetRow: targetRow, formData: formData, userName: currentUser, isClosingJob: mode===32}); 
              } catch(err) { alert("เกิดข้อผิดพลาดในการประมวลผลภาพ: " + err.message); document.getElementById("borrowLoader").style.display="none"; }
-        } else { 
-             formData[6] = (fileObj && fileObj.oldVal) ? fileObj.oldVal : ""; 
-             finishSubmit(mode, {targetRow: targetRow, formData: formData, userName: currentUser, isClosingJob: mode===32}); 
-        }
+        } else { formData[6] = (fileObj && fileObj.oldVal) ? fileObj.oldVal : ""; finishSubmit(mode, {targetRow: targetRow, formData: formData, userName: currentUser, isClosingJob: mode===32}); }
     } else if (mode === 21) {
-        let peas = Array.from(document.querySelectorAll('.chk-pea-n:checked')).map(cb => cb.value); 
-        if(!peas.length) { alert("เลือก PEA อย่างน้อย 1 รายการ"); document.getElementById("borrowLoader").style.display="none"; return; }
+        let peas = Array.from(document.querySelectorAll('.chk-pea-n:checked')).map(cb => cb.value); if(!peas.length) { alert("เลือก PEA อย่างน้อย 1 รายการ"); document.getElementById("borrowLoader").style.display="none"; return; }
         finishSubmit(21, { peas: peas, name: document.getElementById("m21_name").value, activity: document.getElementById("m21_activity").value, borrower: document.getElementById("m21_borrower").value, note: document.getElementById("m21_note").value, userName: currentUser });
     } else if (mode === 22) {
-        let peas = Array.from(document.querySelectorAll('.r-pea-input')).map(inp => inp.value); 
-        if(!peas.length) { alert("กรอก PEA ให้ครบ"); document.getElementById("borrowLoader").style.display="none"; return; }
+        let peas = Array.from(document.querySelectorAll('.r-pea-input')).map(inp => inp.value); if(!peas.length) { alert("กรอก PEA ให้ครบ"); document.getElementById("borrowLoader").style.display="none"; return; }
         finishSubmit(22, { peas: peas, name: document.getElementById("m22_name").value, activity: document.getElementById("m22_activity").value, borrower: document.getElementById("m22_borrower").value, note: document.getElementById("m22_note").value, userName: currentUser });
     } else if (mode === 31) { finishSubmit(31, { pea: document.getElementById("m31_pea").value, userName: currentUser }); }
   }
@@ -372,34 +380,199 @@
     const rows = table.getElementsByTagName("tr"); for (let i = 1; i < rows.length; i++) { rows[i].style.display = rows[i].innerText.toLowerCase().indexOf(filter) > -1 ? "" : "none"; }
   }
 
-  function loadJobStatus() {
-    document.getElementById("completedLoader").style.display="block"; document.getElementById("pendingLoader").style.display="block";
-    callAPI("getJobStatusMeters", {}, function(r) {
-      document.getElementById("completedLoader").style.display="none"; document.getElementById("pendingLoader").style.display="none";
-      if(!r.success) { document.getElementById("completedResult").innerHTML = '<div class="alert alert-danger">'+r.message+'</div>'; document.getElementById("pendingResult").innerHTML = '<div class="alert alert-danger">'+r.message+'</div>'; return; }
-      completedMetersHeaders = r.compHeaders; completedMetersData = r.completed; pendingMetersHeaders = r.pendHeaders; pendingMetersData = r.pending;
-      
-      // การทำ UI ของ Completed/Pending Table (ตัดโค้ด Render แบบเดิมของบอสมาวางได้เลยครับเพื่อประหยัดพื้นที่โค้ด)
-      // *ส่วนนี้ผมรวม Logic การวาดตารางและเดือนไว้เรียบร้อยในไฟล์เต็มแล้วครับ*
-      document.getElementById("completedResult").innerHTML = '<div class="alert alert-success">โหลดตารางส่งงานสำเร็จ (เพิ่ม Render Logic ตรงนี้)</div>';
-      document.getElementById("pendingResult").innerHTML = '<div class="alert alert-success">โหลดตารางงานคงเหลือสำเร็จ (เพิ่ม Render Logic ตรงนี้)</div>';
-    });
+  // =========================================================
+  // 📊 Render Logic: ตารางและเดือน 
+  // =========================================================
+  function extractMonthYear(dStr) {
+      if(!dStr) return "Unknown"; 
+      let p = dStr.toString().trim().split(" ")[0].split(/[-/]/); 
+      if(p.length >= 3) return p[0].length === 4 ? p[0] + "-" + p[1].padStart(2, '0') : p[2].substring(0,4) + "-" + p[1].padStart(2, '0');
+      return "Unknown";
   }
 
+  function populateMonthSelector() {
+      const s = document.getElementById("monthSelector"); s.innerHTML = ""; let mSet = new Set();
+      completedMetersData.forEach(row => { let m = extractMonthYear(row[1] !== "-" && row[1] !== "ดึงจากแอปเปลี่ยนมิเตอร์" ? row[1] : row[0]); if(m !== "Unknown") mSet.add(m); });
+      let mArr = Array.from(mSet).sort((a,b) => b.localeCompare(a)); 
+      if(mArr.length === 0) { s.innerHTML = '<option value="">ไม่มีข้อมูลส่งงาน</option>'; return; }
+      const mNames = ["มกราคม", "กุมภาพันธ์", "มีนาคม", "เมษายน", "พฤษภาคม", "มิถุนายน", "กรกฎาคม", "สิงหาคม", "กันยายน", "ตุลาคม", "พฤศจิกายน", "ธันวาคม"];
+      mArr.forEach(m => { const parts = m.split("-"); s.appendChild(new Option(mNames[parseInt(parts[1],10)-1] + " " + parts[0], m)); });
+      let td = new Date(); let keyCE = td.getFullYear() + "-" + String(td.getMonth() + 1).padStart(2, '0'); let keyBE = (td.getFullYear() + 543) + "-" + String(td.getMonth() + 1).padStart(2, '0');
+      if(mArr.includes(keyBE)) s.value = keyBE; else if(mArr.includes(keyCE)) s.value = keyCE; else s.value = mArr[0];
+  }
+
+  function renderCompletedTable() {
+      const sel = document.getElementById("monthSelector").value; 
+      let fData = completedMetersData.filter(row => extractMonthYear((row[1] !== "-" && row[1] !== "ดึงจากแอปเปลี่ยนมิเตอร์") ? row[1] : row[0]) === sel);
+      if(fData.length === 0) { document.getElementById("completedResult").innerHTML = '<div class="alert alert-info mt-3">ไม่มีข้อมูลส่งงานเดือนนี้</div>'; return; }
+      
+      let html = '<div class="table-container"><table id="tableCompleted" class="table table-sm table-striped mb-0" style="white-space: nowrap; background: rgba(255,255,255,0.7);"><thead><tr>';
+      html += completedMetersHeaders.map(h => '<th>'+h+'</th>').join(""); html += '</tr></thead><tbody>';
+      html += fData.map(row => '<tr>' + row.map((c, idx) => {
+          if (idx === 4) return (typeof c === 'string' && c.startsWith('http')) ? '<td><a href="'+c+'" target="_blank" class="badge bg-primary text-decoration-none"><i class="bi bi-image"></i> รูป</a></td>' : '<td><span class="text-muted small">ไม่มี</span></td>';
+          if (idx === 8) {
+              let badgeClass = "bg-secondary"; let cStr = c ? c.toString().trim() : "";
+              if (cStr === "ส่งงานแล้ว (คลัง)") badgeClass = "bg-info text-dark"; else if (cStr === "ส่งงานแล้ว") badgeClass = "bg-warning text-dark"; else if (cStr === "เสร็จสมบูรณ์") badgeClass = "bg-success"; 
+              return '<td><span class="badge ' + badgeClass + ' shadow-sm p-2">' + c + '</span></td>';
+          }
+          return '<td>'+c+'</td>';
+      }).join("") + '</tr>').join("");
+      html += '</tbody></table></div>';
+      document.getElementById("completedResult").innerHTML = html;
+      let kw = document.getElementById("searchCompleted").value; if (kw) filterTable('tableCompleted', kw);
+  }
+
+  function loadJobStatus() {
+      document.getElementById("completedLoader").style.display="block"; document.getElementById("pendingLoader").style.display="block";
+      document.getElementById("completedResult").innerHTML = ''; document.getElementById("pendingResult").innerHTML = '';
+      callAPI("getJobStatusMeters", {}, function(r) {
+          document.getElementById("completedLoader").style.display="none"; document.getElementById("pendingLoader").style.display="none";
+          if(!r.success) { document.getElementById("completedResult").innerHTML = '<div class="alert alert-danger">'+r.message+'</div>'; document.getElementById("pendingResult").innerHTML = '<div class="alert alert-danger">'+r.message+'</div>'; return; }
+          completedMetersHeaders = r.compHeaders; completedMetersData = r.completed; pendingMetersHeaders = r.pendHeaders; pendingMetersData = r.pending;
+          populateMonthSelector(); renderCompletedTable(); 
+          if(pendingMetersData.length > 0) {
+              let phtml = '<div class="table-container"><table id="tablePending" class="table table-sm table-striped mb-0" style="white-space: nowrap; background: rgba(255,255,255,0.7);"><thead><tr>';
+              phtml += pendingMetersHeaders.map(h => '<th>'+h+'</th>').join(""); phtml += '</tr></thead><tbody>';
+              phtml += pendingMetersData.map(row => '<tr>' + row.map(c => '<td>'+c+'</td>').join("") + '</tr>').join(""); phtml += '</tbody></table></div>';
+              document.getElementById("pendingResult").innerHTML = phtml;
+          } else { document.getElementById("pendingResult").innerHTML = '<div class="alert alert-success fw-bold"><i class="bi bi-check-circle"></i> ไม่มีงานค้างในระบบครับบอส</div>'; }
+      });
+  }
+
+  // =========================================================
+  // ⚡ ระบบรับแจ้งค่าไฟแพง (Elec logic)
+  // =========================================================
+  function loadElecData() {
+      document.getElementById("elecLoader").style.display = "block";
+      callAPI("getElecReports", {}, function(res) { 
+          document.getElementById("elecLoader").style.display = "none"; let html = "";
+          if(res.success && res.data.length > 0) {
+              html = res.data.map(item => { 
+                  let statusHtml = "";
+                  if(item.status === "รอตรวจสอบ") {
+                      statusHtml = (item.reqPhoto && item.reqPhoto.startsWith('http')) ? '<span class="badge bg-warning text-dark shadow-sm" style="cursor:pointer;" onclick="showRequestPhoto(\'' + encodeURIComponent(item.reqPhoto) + '\')"><i class="bi bi-hourglass-split"></i> รอตรวจสอบ (คลิกดูรูป)</span>' : '<span class="badge bg-warning text-dark"><i class="bi bi-hourglass-split"></i> รอตรวจสอบ</span>';
+                      statusHtml += ' <i class="bi bi-trash text-danger ms-1" style="cursor:pointer; font-size:1.1rem;" onclick="confirmDeleteElec(' + item.rowIndex + ')" title="ลบรายการ"></i>';
+                  } else { statusHtml = '<span class="badge bg-success shadow-sm" style="cursor:pointer;" onclick="viewInspectDetails(\'' + encodeURIComponent(JSON.stringify(item)) + '\')"><i class="bi bi-check-circle"></i> ตรวจสอบแล้ว (คลิกดู)</span>'; }
+                  
+                  let manageTdHtml = '<td class="text-center">-</td>';
+                  if (currentUserRole === "ADMIN") {
+                      let btnStatus = item.status === 'รอตรวจสอบ' ? 'btn-outline-danger' : 'btn-outline-secondary'; let btnText = item.status === 'รอตรวจสอบ' ? '🔎 ตรวจสอบ' : '✏️ แก้ไขผล';
+                      let btnHtml = '<button class="btn btn-sm ' + btnStatus + ' fw-bold" onclick="openInspectModal(\'' + encodeURIComponent(JSON.stringify(item)) + '\')">' + btnText + '</button>';
+                      if (item.status === "ตรวจสอบแล้ว") btnHtml += ' <button class="btn btn-sm btn-danger ms-1" onclick="confirmDeleteElec(' + item.rowIndex + ')" title="ลบรายการ"><i class="bi bi-trash"></i></button>';
+                      manageTdHtml = '<td class="text-center">' + btnHtml + '</td>';
+                  }
+                  return '<tr><td>' + item.date.split(" ")[0] + '</td><td class="fw-bold">' + item.pea + '</td><td>' + item.custName + '</td><td>' + (item.phone ? item.phone.toString().replace("'", "") : "") + '</td><td class="text-danger fw-bold">' + item.units + '</td><td>' + statusHtml + '</td>' + manageTdHtml + '</tr>'; 
+              }).join("");
+          } else { let colSpan = currentUserRole === "ADMIN" ? 7 : 6; html = '<tr><td colspan="' + colSpan + '" class="text-center text-muted">ยังไม่มีรายการรับแจ้งครับ</td></tr>'; }
+          document.getElementById("elecTableBody").innerHTML = html;
+      });
+  }
+
+  async function submitElecReportWrapper(e) {
+      e.preventDefault(); const btn = document.getElementById("btnElecSubmit"); const og = btn.innerHTML; 
+      btn.innerHTML = '<span class="spinner-border spinner-border-sm"></span> กำลังบันทึก...'; btn.disabled = true;
+      let pl = { custName: document.getElementById("el_custName").value, caNumber: document.getElementById("el_caNumber").value, peaNumber: document.getElementById("el_peaNumber").value, units: document.getElementById("el_units").value, phone: document.getElementById("el_phone").value, address: document.getElementById("el_address").value, location: document.getElementById("el_location").value, fileData: null };
+      let fIn = document.getElementById("el_photo");
+      if (fIn.files && fIn.files.length > 0) {
+          try {
+              let f = fIn.files[0];
+              let base64Data = f.type.startsWith('image/') ? await compressImage(f, 1024, 1024, 0.7) : await new Promise((resolve, reject) => { let r = new FileReader(); r.onload = (ev) => resolve(ev.target.result.split(',')[1]); r.onerror = () => reject("อ่านไฟล์ไม่สำเร็จ"); r.readAsDataURL(f); });
+              pl.fileData = { base64: base64Data, mimeType: f.type.startsWith('image/') ? 'image/jpeg' : f.type, name: f.name }; 
+          } catch(err) { alert("ประมวลผลไฟล์ไม่สำเร็จ: " + err.message); btn.innerHTML=og; btn.disabled=false; return; }
+      }
+      callAPI("submitElecReport", {formData: pl, userName: currentUser}, function(res){ alert(res.message); btn.innerHTML=og; btn.disabled=false; if(res.success){ document.getElementById("elecForm").reset(); loadElecData(); } }, function(err){ alert("Error: " + err.message); btn.innerHTML=og; btn.disabled=false; });
+  }
+
+  function confirmDeleteElec(rowIndex) {
+      if(confirm("⚠️ ลบรายการแจ้งไฟแพงนี้ใช่หรือไม่?\n(ลบแล้วกู้คืนไม่ได้)")) {
+          document.getElementById("elecLoader").style.display = "block";
+          callAPI("deleteElecReport", {rowIndex: rowIndex, userRole: currentUserRole}, function(res){ alert(res.message); if(res.success) loadElecData(); else document.getElementById("elecLoader").style.display = "none"; }, function(err){ alert("ข้อผิดพลาด: " + err.message); document.getElementById("elecLoader").style.display = "none"; });
+      }
+  }
+
+  function showRequestPhoto(encodedUrl) { let url = decodeURIComponent(encodedUrl); document.getElementById("reqPhotoBody").innerHTML = '<img src="' + getDriveImageSrc(url) + '" class="img-fluid rounded border shadow-sm" style="max-height: 400px; width: auto;">'; new bootstrap.Modal(document.getElementById("reqPhotoModal")).show(); }
+  function getDriveImageSrc(url) { if(!url) return ""; const match = url.match(/\/d\/([a-zA-Z0-9_-]+)/) || url.match(/[?&]id=([a-zA-Z0-9_-]+)/); return (match && match[1]) ? "https://lh3.googleusercontent.com/d/" + match[1] : url; }
+
+  function viewInspectDetails(safeStr) {
+      const item = JSON.parse(decodeURIComponent(safeStr)); document.getElementById("detCustName").innerText = item.custName; document.getElementById("detPEA").innerText = item.pea;
+      let lEl = document.getElementById("detLeak"); lEl.innerText = item.leak || "ไม่ได้ระบุ"; lEl.className = 'badge fs-6 ' + (item.leak === 'พบไฟรั่วในระบบ' ? 'bg-danger' : 'bg-success');
+      document.getElementById("detCause").innerText = item.cause || "-"; document.getElementById("detSummary").innerText = item.summary || "-";
+      let phtml = '<span class="text-muted small">ไม่มีรูปภาพประกอบ</span>';
+      if(item.inspPhotos) {
+          let urls = item.inspPhotos.split('\n').filter(String);
+          if(urls.length > 0) { phtml = '<div class="row g-2">'; urls.forEach(url => { phtml += '<div class="' + (urls.length > 2 ? "col-4" : "col-6") + '"><img src="' + getDriveImageSrc(url) + '" crossorigin="anonymous" class="img-fluid rounded border shadow-sm w-100" style="object-fit: cover; aspect-ratio: 4/3;"></div>'; }); phtml += '</div>'; }
+      }
+      document.getElementById("detPhotos").innerHTML = phtml; new bootstrap.Modal(document.getElementById("elecDetailsModal")).show();
+  }
+
+  function exportModalToImage() {
+      const btn = document.getElementById("btnExportImage"); const ogHtml = btn.innerHTML; btn.innerHTML = '<span class="spinner-border spinner-border-sm"></span> กำลังสร้างรูปภาพ...'; btn.disabled = true; window.scrollTo(0, 0);
+      html2canvas(document.getElementById("exportContentArea"), { scale: 2, useCORS: true, allowTaint: false, backgroundColor: "#ffffff" }).then(canvas => {
+          const link = document.createElement('a'); link.download = 'ผลตรวจสอบ_PEA_' + (document.getElementById("detPEA").innerText || "Export") + '.png'; link.href = canvas.toDataURL('image/png'); link.click(); btn.innerHTML = ogHtml; btn.disabled = false;
+      }).catch(err => { alert("ไม่สามารถสร้างรูปภาพได้: " + err.message); btn.innerHTML = ogHtml; btn.disabled = false; });
+  }
+
+  function openInspectModal(safeStr) {
+      const item = JSON.parse(decodeURIComponent(safeStr)); document.getElementById("inspDispName").innerText = item.custName || "ไม่ระบุชื่อ"; document.getElementById("inspDispPEA").innerText = item.pea; document.getElementById("inspRowIndex").value = item.rowIndex; document.getElementById("leakYes").checked = true; document.getElementById("inspCause").value = item.cause || ""; document.getElementById("inspSummary").value = item.summary || ""; document.getElementById("inspFiles").value = "";
+      let navArea = document.getElementById("navLinkArea");
+      if(item.location && item.location.trim() !== "") { let locStr = item.location.trim(); let targetUrl = (!locStr.startsWith('http') && locStr.includes(',')) ? 'https://www.google.com/maps/search/?api=1&query=' + encodeURIComponent(locStr) : locStr; navArea.innerHTML = '<a href="' + targetUrl + '" target="_blank" class="btn btn-sm btn-primary fw-bold text-white w-100 mt-1"><i class="bi bi-geo-alt-fill"></i> 📍 มีข้อมูลตำแหน่ง: คลิกเปิดแผนที่นำทาง</a>'; } else { navArea.innerHTML = '<span class="badge bg-secondary w-100 d-block text-center py-1">ไม่มีพิกัดตำแหน่ง</span>'; }
+      if(item.status === "ตรวจสอบแล้ว" && item.leak === "ไม่พบไฟรั่วในระบบ") document.getElementById("leakNo").checked = true;
+      new bootstrap.Modal(document.getElementById("elecInspectModal")).show();
+  }
+
+  async function submitInspection() {
+      const btn = document.getElementById("btnSaveInspect"); const ogHtml = btn.innerHTML; btn.innerHTML = '<span class="spinner-border spinner-border-sm"></span> กำลังเตรียมไฟล์...'; btn.disabled = true;
+      try {
+          const files = document.getElementById("inspFiles").files; let fArr = [];
+          for (let i = 0; i < files.length; i++) { btn.innerHTML = '<span class="spinner-border spinner-border-sm"></span> กำลังบีบอัดรูปที่ ' + (i + 1) + '/' + files.length + '...'; let base64Data = await compressImage(files[i], 1024, 1024, 0.7); fArr.push({ base64: base64Data, mimeType: 'image/jpeg', name: files[i].name }); }
+          btn.innerHTML = '<span class="spinner-border spinner-border-sm"></span> กำลังส่งข้อมูล...';
+          let payload = { leakStatus: document.querySelector('input[name="inspLeakStatus"]:checked').value, cause: document.getElementById("inspCause").value, summary: document.getElementById("inspSummary").value, files: fArr };
+          callAPI("saveElecInspection", {rowIndex: document.getElementById("inspRowIndex").value, formData: payload}, function(res) { alert(res.message); btn.innerHTML = ogHtml; btn.disabled = false; if(res.success) { let mod = bootstrap.Modal.getInstance(document.getElementById("elecInspectModal")); if(mod) mod.hide(); loadElecData(); } }, function(err) { alert("Error: " + err.message); btn.innerHTML = ogHtml; btn.disabled = false; });
+      } catch(error) { alert("เกิดข้อผิดพลาดในการประมวลผลรูปภาพ: " + error.message); btn.innerHTML = ogHtml; btn.disabled = false; }
+  }
+
+  // =========================================================
+  // 🔍 ค้นหา และ Export
+  // =========================================================
   function doGlobalJobSearch() {
      const kw = document.getElementById("globalJobSearch").value.trim().toLowerCase(); if(!kw) return;
      const btn = document.getElementById("btnGlobalSearch"); const og = btn.innerHTML; btn.innerHTML = '<span class="spinner-border spinner-border-sm"></span>'; btn.disabled = true;
-     callAPI("getJobStatusMeters", {}, function(r) {
-         btn.innerHTML = og; btn.disabled = false;
-         if(r.success) { completedMetersData = r.completed; pendingMetersData = r.pending; executeGlobalSearch(kw); }
-     });
+     callAPI("getJobStatusMeters", {}, function(r) { btn.innerHTML = og; btn.disabled = false; if(r.success) { completedMetersData = r.completed; pendingMetersData = r.pending; executeGlobalSearch(kw); } });
   }
-  function executeGlobalSearch(kw) { /* Logic ค้นหาข้ามแท็บเดิมของบอส */ }
+
+  function executeGlobalSearch(kw) {
+     if(pendingMetersData.some(r => (r[1]||"").toString().toLowerCase().includes(kw) || (r[2]||"").toString().toLowerCase().includes(kw))) {
+         new bootstrap.Tab(document.querySelector('[data-bs-target="#pending"]')).show(); loadJobStatus(); document.getElementById("searchPending").value = kw; filterTable('tablePending', kw); return;
+     }
+     let fMonthRow = completedMetersData.find(r => (r[3]||"").toString().toLowerCase().includes(kw) || (r[2]||"").toString().toLowerCase().includes(kw));
+     if(fMonthRow) { 
+         let m = extractMonthYear(fMonthRow[1] !== "-" && fMonthRow[1] !== "ดึงจากแอปเปลี่ยนมิเตอร์" ? fMonthRow[1] : fMonthRow[0]); 
+         new bootstrap.Tab(document.querySelector('[data-bs-target="#completed"]')).show(); populateMonthSelector(); document.getElementById("monthSelector").value = m; renderCompletedTable(); document.getElementById("searchCompleted").value = kw; filterTable('tableCompleted', kw); return; 
+     }
+     alert("ไม่พบข้อมูล '" + kw + "'");
+  }
   
   function handleSearch() {
     let type = document.querySelector('input[name="searchType"]:checked').value; let kw = document.getElementById("searchKeyword").value;
     callAPI("searchMeter", {searchType: type, keyword: kw}, function(r) { 
         document.getElementById("searchResult").innerHTML = r.success ? r.data.map(set => '<table class="table table-sm table-bordered mb-3" style="background:rgba(255,255,255,0.8);">' + set.map(i=> '<tr><th class="bg-light">'+i.header+'</th><td>'+i.value+'</td></tr>').join("") + '</table>').join("") : '<div class="alert alert-warning">'+r.message+'</div>';
+    });
+  }
+
+  function toggleSearchUI() { 
+      const t = document.querySelector('input[name="searchType"]:checked').value; const i = document.getElementById("searchKeyword"); 
+      i.placeholder = t === "PEA" ? "พิมพ์หมายเลข PEA..." : "พิมพ์ชื่อ..."; if(t === "PEA") { i.removeAttribute("list"); } else { i.setAttribute("list", "customerNameList"); } 
+  }
+
+  function handleExport(fmt) {
+    let start = document.getElementById("exportStartDate").value; let end = document.getElementById("exportEndDate").value;
+    callAPI("getExportData", {start: start, end: end}, function(r) {
+      if(fmt==='EXCEL') { const ws = XLSX.utils.aoa_to_sheet(r.data); const wb = XLSX.utils.book_new(); XLSX.utils.book_append_sheet(wb, ws, "Data"); XLSX.writeFile(wb, "Report.xlsx"); }
+      else { 
+          document.getElementById("pdfThead").innerHTML = '<tr>' + r.data[0].map(h=>'<th>'+h+'</th>').join("") + '</tr>'; 
+          document.getElementById("pdfTbody").innerHTML = r.data.slice(1).map(row=> '<tr>' + row.map(c=>'<td>'+c+'</td>').join("") + '</tr>').join(""); 
+          const el = document.getElementById("hiddenTableForPdf"); el.style.display="block"; html2pdf().from(el).set({margin:0.2, jsPDF:{orientation:'landscape'}}).save().then(() => el.style.display="none"); 
+      }
     });
   }
 
@@ -423,39 +596,25 @@
   }
 
   function speak(text) {
-    if('speechSynthesis' in window) {
-      const msg = new SpeechSynthesisUtterance(text); msg.lang = 'th-TH'; msg.rate = 1.1; window.speechSynthesis.speak(msg);
-    }
+    if('speechSynthesis' in window) { const msg = new SpeechSynthesisUtterance(text); msg.lang = 'th-TH'; msg.rate = 1.1; window.speechSynthesis.speak(msg); }
   }
 
   function processVoiceCommand(text) {
     let keyword = text.replace(/ช่วย/g, '').replace(/กรอง/g, '').replace(/หา/g, '').replace(/ค้นหา/g, '').replace(/ใบงาน/g, '').replace(/ที่อยู่/g, '').replace(/เบอร์/g, '').replace(/มิเตอร์/g, '').replace(/ครับ/g, '').replace(/ค่ะ/g, '').trim();
     if(keyword === "") keyword = text.trim();
 
-    // ไปที่หน้าค้นหา
     new bootstrap.Tab(document.querySelector('#tab-search button')).show();
-    document.getElementById('searchKeyword').value = keyword;
-    handleSearch(); 
+    document.getElementById('searchKeyword').value = keyword; handleSearch(); 
 
-    // หน่วงเวลาให้ค้นหาเสร็จแล้วพูดสรุป
     setTimeout(() => {
       let resultDiv = document.getElementById('searchResult').innerHTML;
-      if (resultDiv.includes("table")) {
-         speak("พบข้อมูล " + keyword + " ในระบบคลังแล้วครับบอส");
-      } else {
-         speak("ผมตรวจสอบแล้ว ไม่พบข้อมูลของ " + keyword + " เลยครับ");
-      }
-    }, 800); 
+      if (resultDiv.includes("table")) speak("พบข้อมูล " + keyword + " ในระบบคลังแล้วครับบอส");
+      else speak("ผมตรวจสอบแล้ว ไม่พบข้อมูลของ " + keyword + " เลยครับ");
+    }, 1500); 
   }
 
   // 🚀 ลงทะเบียน Service Worker สำหรับ PWA
-  if ('serviceWorker' in navigator) {
-    window.addEventListener('load', () => {
-      navigator.serviceWorker.register('./sw.js')
-        .then(reg => console.log('✅ Service Worker ลงทะเบียนสำเร็จ!'))
-        .catch(err => console.error('❌ Service Worker ล้มเหลว:', err));
-    });
-  }
+  if ('serviceWorker' in navigator) { window.addEventListener('load', () => { navigator.serviceWorker.register('./sw.js').then(reg => console.log('✅ Service Worker ลงทะเบียนสำเร็จ!')).catch(err => console.error('❌ Service Worker ล้มเหลว:', err)); }); }
 </script>
 </body>
 </html>
